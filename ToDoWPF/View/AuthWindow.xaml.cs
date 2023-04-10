@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using ToDoWPF.View;
 
 namespace ToDoWPF
 {
@@ -23,6 +24,13 @@ namespace ToDoWPF
         public AuthWindow()
         {
             InitializeComponent();
+        }
+
+        private void CreateAccountButton_Click(object sender, RoutedEventArgs e)
+        {
+            RegisterWindow registerWindow = new RegisterWindow();
+            registerWindow.Show();
+            Close();
         }
     }
 }

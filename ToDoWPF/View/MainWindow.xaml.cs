@@ -26,7 +26,27 @@ namespace ToDoWPF.View
 
         private void AddNoteButton_Click(object sender, RoutedEventArgs e)
         {
+            TextBlock textBlock = new TextBlock() { FontSize = 20, Text = AddNoteTextBox.Text, Foreground=Brushes.Black};
+            textBlock.FontWeight = FontWeights.SemiBold;
+            StackPanel stackPanel = new StackPanel();
 
+            Border border = new Border
+            {
+                Background = Brushes.White,
+                BorderBrush = Brushes.LightGray,
+                BorderThickness = new Thickness(3),
+                Margin = new Thickness(5, 10, 0, 0),
+                CornerRadius = new CornerRadius(5),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Width = 350,
+                Height = 40,
+                Child = textBlock
+            };
+
+            border.Child = textBlock;
+            stackPanel.Children.Add(border);
+            NotesGroupBox.Items.Add(stackPanel);
+            AddNoteTextBox.Clear();
         }
     }
 }

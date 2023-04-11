@@ -30,11 +30,13 @@
                             <Setter Property="CornerRadius" Value="20"/>
                         </Style>
                     </Border.Resources>
-                    <ui:TextBox Foreground="Black" FontWeight="SemiBold" FontSize="22"/>
+                    <ui:TextBox x:Name="AddNoteTextBox" Foreground="Black" FontWeight="SemiBold" FontSize="22"/>
                 </Border>
             </StackPanel>
-            <Button Content="Add Note" Background="#006C9E" Foreground="White" Width="100" Height="30" />
-            <ListBox Background="White" Height="230" Margin="10"/>
+            <Button Content="Add Note" Background="#006C9E" Foreground="White" Width="100" Height="30" Click="AddNoteButton_Click" />
+            <ListBox x:Name="NotesGroupBox" Background="White" MaxHeight="800" Margin="10"
+                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                     VerticalAlignment="Center"/>
         </StackPanel>
     </Grid>
 </Window>

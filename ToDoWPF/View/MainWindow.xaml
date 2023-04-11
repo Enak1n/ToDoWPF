@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml" x:Class="ToDoWPF.View.MainWindow"
         mc:Ignorable="d"
-        Title="TODO" Height="500" Width="800"
-        MinHeight="500" MinWidth="800">
+        WindowState="Maximized"
+        ResizeMode="NoResize"
+        Title="TODO" d:DesignHeight="462.173" d:DesignWidth="765.888">
     <Window.Background>
         <LinearGradientBrush>
             <GradientStop Color="#8360c3" Offset="0"/>
@@ -34,7 +35,7 @@
                 </Border>
             </StackPanel>
             <Button Content="Add Note" Background="#006C9E" Foreground="White" Width="100" Height="30" Click="AddNoteButton_Click" />
-            <ListBox x:Name="NotesGroupBox" Background="White" MaxHeight="800" Margin="10"
+            <ListView x:Name="NotesGroupBox" Background="White" MaxHeight="750" Margin="10"
                      ScrollViewer.VerticalScrollBarVisibility="Auto"
                      VerticalAlignment="Center"/>
         </StackPanel>

@@ -22,7 +22,7 @@
             <StackPanel>
                 <TextBlock Text="Welcome!" FontSize="30" FontWeight="Bold" Margin="0 0 0 20" Foreground="Black"/>
 
-                <Button Content="Create Account" FontWeight="Bold" Margin="0 0 0 20" Background="White" Foreground="Black"
+                <ui:Button Content="Create Account" FontWeight="Bold" Margin="0 0 0 20" Background="White" Foreground="Black"
                         Click="CreateAccountButton_Click"/>
 
                 <Label Foreground="Black" FontSize="15" FontWeight="SemiBold">Login</Label>

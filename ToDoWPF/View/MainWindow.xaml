@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         WindowState="Maximized"
         ResizeMode="NoResize"
-        Title="TODO" d:DesignHeight="462.173" d:DesignWidth="765.888">
+        Title="TODO" Height="542" Width="898">
     <Window.Background>
         <LinearGradientBrush>
             <GradientStop Color="#8360c3" Offset="0"/>

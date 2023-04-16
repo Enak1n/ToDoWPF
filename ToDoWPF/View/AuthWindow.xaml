@@ -30,7 +30,7 @@
                 <Label Foreground="Black" FontSize="15" FontWeight="SemiBold">Password</Label>
                 <PasswordBox x:Name="PasswordTextBox" Background="White"/>
 
-                <ui:Button Content="Log In" Margin="0 20" Background="DarkViolet" FontWeight="Bold"/>
+                <ui:Button Content="Log In" Margin="0 20" Background="DarkViolet" FontWeight="Bold" Click="LogInButton_Click"/>
             </StackPanel>
         </Border>
     </Grid>

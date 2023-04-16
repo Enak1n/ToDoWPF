@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Linq;
+using System.Windows;
 using ToDoWPF.AppData;
 using ToDoWPF.Model;
 
@@ -22,12 +23,31 @@ namespace ToDoWPF.View
             string pass = PasswordTextBox.Password;
             string repeatedPassword = RepeatPasswordTextBox.Password;
 
-            if(pass.Length > 8 && pass == repeatedPassword)
+            if (pass == repeatedPassword)
             {
                 User user = new User(login, pass);
+                User userFromDB = new User();
 
-                _usersDB.Users.Add(user);
-                _usersDB.SaveChanges();
+                using (UsersContext context = new UsersContext())
+                {
+                    userFromDB = context.Users.Where(b => b.Login == login).FirstOrDefault();
+                }
+
+                if (userFromDB != null)
+                {
+                    MessageBox.Show("Login is already using!");
+                }
+                else
+                {
+                    AuthWindow authWindow = new AuthWindow();
+
+                    _usersDB.Users.Add(user);
+                    _usersDB.SaveChanges();
+
+                    MessageBox.Show("Congratulations, you created account, now you need to Log In!");
+                    authWindow.Show();
+                    Close();
+                }
             }
 
         }

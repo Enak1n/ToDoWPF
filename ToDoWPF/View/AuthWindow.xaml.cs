@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using ToDoWPF.Model;
 using ToDoWPF.View;
+using ToDoWPF.AppData;
+using System.Linq;
 
 namespace ToDoWPF
 {
@@ -21,6 +11,8 @@ namespace ToDoWPF
     /// </summary>
     public partial class AuthWindow : Window
     {
+        private UsersContext _usersDB = new UsersContext();
+
         public AuthWindow()
         {
             InitializeComponent();
@@ -31,6 +23,26 @@ namespace ToDoWPF
             RegisterWindow registerWindow = new RegisterWindow();
             registerWindow.Show();
             Close();
+        }
+
+        private void LogInButton_Click(object sender, RoutedEventArgs e)
+        {
+            string login = LoginTextBox.Text;
+            string pass = PasswordTextBox.Password;
+
+            User user = new User(login, pass);
+            user = _usersDB.Users.Where(b => b.Login == login && b.Pass == pass).FirstOrDefault();
+
+            if (user != null)
+            {
+                MainWindow mainWindow = new MainWindow();
+                mainWindow.Show();
+                Close();
+            }
+            else
+            {
+                MessageBox.Show("User not found!");
+            }
         }
     }
 }

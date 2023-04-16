@@ -29,7 +29,7 @@ namespace ToDoWPF.View
         {
             if (AddNoteTextBox.Text == "" || AddNoteTextBox.Text.Length > 40)
             {
-                MessageBox.Show("Length is so long!");
+                MessageBox.Show("Length is so long or string is empty!");
             }
             else
             {

@@ -24,11 +24,11 @@
                 <TextBlock Text="Create account" FontSize="30" FontWeight="Bold" Margin="0 0 0 20" Foreground="Black"/>
 
                 <Label Foreground="Black" FontSize="15" FontWeight="SemiBold">Login</Label>
-                <TextBox x:Name="LoginTextBox" Margin="0 0 0 20" Background="White"/>
+                <TextBox x:Name="LoginTextBox" Margin="0 0 0 20" Background="White" Foreground="Black"/>
                 <Label Foreground="Black" FontSize="15" FontWeight="SemiBold">Password</Label>
-                <PasswordBox x:Name="PasswordTextBox" Background="White" Margin="0 0 0 20"/>
+                <PasswordBox x:Name="PasswordTextBox" Background="White" Margin="0 0 0 20" Foreground="Black"/>
                 <Label Foreground="Black" FontSize="15" FontWeight="SemiBold">Repeat Password</Label>
-                <PasswordBox x:Name="RepeatPasswordTextBox" Background="White"/>
+                <PasswordBox x:Name="RepeatPasswordTextBox" Background="White" Foreground="Black"/>
 
                 <ui:Button Content="Create!" Margin="0 20" Background="DarkViolet" FontWeight="Bold" Click="CreateAccountButton_Click"/>
             </StackPanel>

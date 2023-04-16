@@ -1,16 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+﻿using System.Windows;
+using ToDoWPF.AppData;
+using ToDoWPF.Model;
 
 namespace ToDoWPF.View
 {
@@ -19,6 +9,8 @@ namespace ToDoWPF.View
     /// </summary>
     public partial class RegisterWindow : Window
     {
+        private UsersContext _usersDB = new UsersContext();
+
         public RegisterWindow()
         {
             InitializeComponent();
@@ -26,9 +18,18 @@ namespace ToDoWPF.View
 
         private void CreateAccountButton_Click(object sender, RoutedEventArgs e)
         {
-            AuthWindow authWindow = new AuthWindow();
-            authWindow.Show();
-            Close();
+            string login = LoginTextBox.Text;
+            string pass = PasswordTextBox.Password;
+            string repeatedPassword = RepeatPasswordTextBox.Password;
+
+            if(pass.Length > 8 && pass == repeatedPassword)
+            {
+                User user = new User(login, pass);
+
+                _usersDB.Users.Add(user);
+                _usersDB.SaveChanges();
+            }
+
         }
     }
 }

@@ -7,7 +7,7 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         mc:Ignorable="d"
         Title="TODO" Height="500" Width="800"
-        MinHeight="500" MinWidth="800">
+        MinHeight="550" MinWidth="800">
     <Window.Background>
         <LinearGradientBrush>
             <GradientStop Color="#8360c3" Offset="0"/>
@@ -26,9 +26,9 @@
                         Click="CreateAccountButton_Click"/>
 
                 <Label Foreground="Black" FontSize="15" FontWeight="SemiBold">Login</Label>
-                <TextBox x:Name="LoginTextBox" Margin="0 0 0 20" Background="White"/>
+                <TextBox x:Name="LoginTextBox" Margin="0 0 0 20" Background="White" Foreground="Black"/>
                 <Label Foreground="Black" FontSize="15" FontWeight="SemiBold">Password</Label>
-                <PasswordBox x:Name="PasswordTextBox" Background="White"/>
+                <PasswordBox x:Name="PasswordTextBox" Background="White" Foreground="Black"/>
 
                 <ui:Button Content="Log In" Margin="0 20" Background="DarkViolet" FontWeight="Bold" Click="LogInButton_Click"/>
             </StackPanel>

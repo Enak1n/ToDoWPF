@@ -51,5 +51,12 @@ namespace ToDoWPF.View
             }
 
         }
+
+        private void BackButton_Click(object sender, RoutedEventArgs e)
+        {
+            AuthWindow authWindow = new AuthWindow();
+            authWindow.Show();
+            Close();
+        }
     }
 }

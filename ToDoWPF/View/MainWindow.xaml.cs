@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using ToDoWPF.Model;
+using ToDoWPF.AppData;
+using Npgsql;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace ToDoWPF.View
 {
@@ -20,9 +16,12 @@ namespace ToDoWPF.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        public MainWindow()
+        //private UsersContext _usersDB = new UsersContext();
+
+        public MainWindow(User user)
         {
             InitializeComponent();
+            CurrentUesr.Text = user.Login;
         }
 
         private void AddNoteButton_Click(object sender, RoutedEventArgs e)
@@ -90,6 +89,19 @@ namespace ToDoWPF.View
                 stackPanel.Children.Add(deleteButton);
                 NotesGroupBox.Items.Add(stackPanel);
                 AddNoteTextBox.Clear();
+
+
+                List<string> notes = new List<string>();
+                notes.Add(AddNoteTextBox.Text);
+                var connection = new NpgsqlConnection("Host = localhost; Port = 5432; Database = users; Username = postgres; Password = masj109ia4002");
+                connection.Open();
+                string cmd = "INSERT INTO Users (Notes) VALUES(@Notes)";
+                using (var command = new NpgsqlCommand(cmd, connection))
+                {
+                    command.Parameters.AddWithValue("Notes", notes);
+
+                    command.ExecuteNonQuery();
+                }
             }
         }
 

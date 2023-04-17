@@ -6,9 +6,9 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:local="clr-namespace:ToDoWPF.View"
         mc:Ignorable="d"
-        Title="TODO" Height="500" Width="800"
-        MinHeight="500" MinWidth="800">
-    
+        Title="TODO" Height="550" Width="800"
+        MinHeight="550" MinWidth="800">
+
     <Window.Background>
         <LinearGradientBrush>
             <GradientStop Color="#8360c3" Offset="0"/>
@@ -29,8 +29,8 @@
                 <PasswordBox x:Name="PasswordTextBox" Background="White" Margin="0 0 0 20" Foreground="Black"/>
                 <Label Foreground="Black" FontSize="15" FontWeight="SemiBold">Repeat Password</Label>
                 <PasswordBox x:Name="RepeatPasswordTextBox" Background="White" Foreground="Black"/>
-
                 <ui:Button Content="Create!" Margin="0 20" Background="DarkViolet" FontWeight="Bold" Click="CreateAccountButton_Click"/>
+                <ui:Button Content ="Back to Authorization" Background="DarkViolet" Click="BackButton_Click"/>
             </StackPanel>
         </Border>
     </Grid>

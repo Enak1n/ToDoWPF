@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ToDoWPF.Model;
 
-public class User
+public partial class User
 {
     public int Id { get; set; }
 
@@ -11,11 +11,16 @@ public class User
 
     public string Pass { get; set; } = null!;
 
-    public User() { }
+    public string[]? Notes { get; set; }
+
+    public User()
+    {
+
+    }
 
     public User(string login, string pass)
     {
         Login = login;
-        Pass = pass;    
+        Pass = pass;
     }
 }

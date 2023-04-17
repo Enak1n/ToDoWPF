@@ -1,8 +1,8 @@
 ﻿using System.Windows;
-using ToDoWPF.Model;
 using ToDoWPF.View;
-using ToDoWPF.AppData;
 using System.Linq;
+using ToDoWPF.Model;
+using ToDoWPF.AppData;
 
 namespace ToDoWPF
 {
@@ -35,13 +35,13 @@ namespace ToDoWPF
 
             if (user != null)
             {
-                MainWindow mainWindow = new MainWindow();
+                MainWindow mainWindow = new MainWindow(user);
                 mainWindow.Show();
                 Close();
             }
             else
             {
-                MessageBox.Show("User not found!");
+                MessageBox.Show("Logi is not found!");
             }
         }
     }

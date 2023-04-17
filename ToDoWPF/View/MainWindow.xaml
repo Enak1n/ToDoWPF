@@ -22,7 +22,7 @@
                         <Setter Property="CornerRadius" Value="20"/>
                     </Style>
                 </Border.Resources>
-                <TextBlock Text="My Notes" FontSize="35" FontWeight="Bold" Padding="10" HorizontalAlignment="Center"/>
+                <TextBlock x:Name="CurrentUesr" FontSize="35" FontWeight="Bold" Padding="10" HorizontalAlignment="Center"/>
             </Border>
             <StackPanel>
                 <Border Background="White" BorderBrush="#BFBFBF" BorderThickness="3" Padding="10" Margin="0,0,0,10">

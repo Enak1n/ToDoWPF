@@ -8,6 +8,8 @@ using ToDoWPF.AppData;
 using Npgsql;
 using System.Linq;
 using System.Collections.Generic;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Wpf.Ui.Appearance;
 
 namespace ToDoWPF.View
 {
@@ -16,7 +18,7 @@ namespace ToDoWPF.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        //private UsersContext _usersDB = new UsersContext();
+        private UsersContext _usersDB = new UsersContext();
 
         public MainWindow(User user)
         {
@@ -26,6 +28,7 @@ namespace ToDoWPF.View
 
         private void AddNoteButton_Click(object sender, RoutedEventArgs e)
         {
+            string title = AddNoteTextBox.Text;
             if (AddNoteTextBox.Text == "" || AddNoteTextBox.Text.Length > 40)
             {
                 MessageBox.Show("Length is so long or string is empty!");
@@ -90,18 +93,14 @@ namespace ToDoWPF.View
                 NotesGroupBox.Items.Add(stackPanel);
                 AddNoteTextBox.Clear();
 
-
-                List<string> notes = new List<string>();
-                notes.Add(AddNoteTextBox.Text);
                 var connection = new NpgsqlConnection("Host = localhost; Port = 5432; Database = users; Username = postgres; Password = masj109ia4002");
                 connection.Open();
-                string cmd = "INSERT INTO Users (Notes) VALUES(@Notes)";
-                using (var command = new NpgsqlCommand(cmd, connection))
-                {
-                    command.Parameters.AddWithValue("Notes", notes);
-
-                    command.ExecuteNonQuery();
-                }
+                string cmd = $"UPDATE users SET notes[0] = @note WHERE login = @login";
+                NpgsqlCommand command = new NpgsqlCommand(cmd, connection);
+                command.Parameters.AddWithValue("note", title);
+                command.Parameters.AddWithValue("login", CurrentUesr.Text);
+                command.ExecuteNonQuery();
+                connection.Close();
             }
         }
 

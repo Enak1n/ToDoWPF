@@ -37,9 +37,18 @@ namespace ToDoWPF.View
             var reader = cmd.ExecuteReader();
             if (reader.Read())
             {
-                var array = (string[])reader["notes"];
+                var array = reader["notes"];
 
-                _notes.AddRange(array);
+                if (array is System.DBNull)
+                {
+                    _connection.Close();
+                    reader.Close();
+                    return;
+                }
+                else
+                {
+                    _notes.AddRange((string[])array);
+                }
             }
 
             _connection.Close();
@@ -165,7 +174,6 @@ namespace ToDoWPF.View
                     Child = textBlock
                 };
 
-
                 stackPanel.Children.Add(border);
                 stackPanel.Children.Add(finishTask);
                 stackPanel.Children.Add(editButton);
@@ -175,11 +183,24 @@ namespace ToDoWPF.View
 
 
                 _connection.Open();
-                string cmd = $"UPDATE users SET notes[0] = @note WHERE login = @login";
+                string cmd = $"UPDATE users SET notes[array_length(notes, 1)] = @note WHERE login = @login";
+                string cmdForNull = $"UPDATE users SET notes[0] = @note WHERE login = @login";
                 NpgsqlCommand command = new NpgsqlCommand(cmd, _connection);
-                command.Parameters.AddWithValue("note", title);
-                command.Parameters.AddWithValue("login", CurrentUesr.Text);
-                command.ExecuteNonQuery();
+                NpgsqlCommand commandForNull = new NpgsqlCommand(cmdForNull, _connection);
+
+                try
+                {
+                    command.Parameters.AddWithValue("note", title);
+                    command.Parameters.AddWithValue("login", CurrentUesr.Text);
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    commandForNull.Parameters.AddWithValue("note", title);
+                    commandForNull.Parameters.AddWithValue("login", CurrentUesr.Text);
+                    commandForNull.ExecuteNonQuery();
+                }
+
                 _connection.Close();
             }
         }

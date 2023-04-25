@@ -23,6 +23,7 @@ namespace ToDoWPF.View
         private List<string> _notes = new List<string>();
         private NpgsqlConnection _connection = new NpgsqlConnection("Host = localhost; Port = 5432;" +
             "Database = users; Username = postgres; Password = masj109ia4002");
+        private List<StackPanel> _stackPanels = new List<StackPanel>();
 
         public MainWindow(User user)
         {
@@ -112,6 +113,7 @@ namespace ToDoWPF.View
                 stackPanel.Children.Add(editButton);
                 stackPanel.Children.Add(deleteButton);
                 NotesGroupBox.Items.Add(stackPanel);
+                _stackPanels.Add(stackPanel);
             }
         }
 
@@ -180,7 +182,8 @@ namespace ToDoWPF.View
                 stackPanel.Children.Add(deleteButton);
                 NotesGroupBox.Items.Add(stackPanel);
                 AddNoteTextBox.Clear();
-
+                _notes.Add(title);
+                _stackPanels.Add(stackPanel);
 
                 _connection.Open();
                 string cmd = $"UPDATE users SET notes[array_length(notes, 1)] = @note WHERE login = @login";
@@ -212,7 +215,23 @@ namespace ToDoWPF.View
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Delete");
+            var currentStackPanel = _stackPanels[NotesGroupBox.SelectedIndex];
+            Border currentBorder = (Border)currentStackPanel.Children[0];
+            TextBlock title = (TextBlock)currentBorder.Child;
+
+            if (currentStackPanel != null)
+            {
+                _connection.Open();
+                string cmd = $"UPDATE users SET notes = array_remove(notes, @note ) WHERE login = @login";
+                NpgsqlCommand command = new NpgsqlCommand(cmd, _connection);
+                command.Parameters.AddWithValue("note", title.Text);
+                command.Parameters.AddWithValue("login", CurrentUesr.Text);
+                command.ExecuteNonQuery();
+                _connection.Close();
+
+                NotesGroupBox.Items.Remove(currentStackPanel);
+                _stackPanels.Remove(currentStackPanel);
+            }
         }
     }
 }

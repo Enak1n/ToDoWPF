@@ -41,7 +41,7 @@ namespace ToDoWPF
             }
             else
             {
-                MessageBox.Show("Logi is not found!");
+                MessageBox.Show("Login is not found!");
             }
         }
     }

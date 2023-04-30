@@ -5,12 +5,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using ToDoWPF.Model;
 using ToDoWPF.AppData;
-using Npgsql;
-using System.Linq;
 using System.Collections.Generic;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-using Wpf.Ui.Appearance;
-using Microsoft.EntityFrameworkCore;
+using System.Configuration;
 
 namespace ToDoWPF.View
 {
@@ -19,41 +15,15 @@ namespace ToDoWPF.View
     /// </summary>
     public partial class MainWindow : Window
     {
-        private UsersContext _usersDB = new UsersContext();
         private List<string> _notes = new List<string>();
-        private NpgsqlConnection _connection = new NpgsqlConnection("Host = localhost; Port = 5432;" +
-            "Database = users; Username = postgres; Password = masj109ia4002");
         private List<StackPanel> _stackPanels = new List<StackPanel>();
 
         public MainWindow(User user)
         {
             InitializeComponent();
-            CurrentUesr.Text = user.Login;
+            CurrentUser.Text = user.Login;
 
-            _connection.Open();
-
-            var cmd = new NpgsqlCommand("Select notes from users where id = @id", _connection);
-            cmd.Parameters.AddWithValue("id", user.Id);
-
-            var reader = cmd.ExecuteReader();
-            if (reader.Read())
-            {
-                var array = reader["notes"];
-
-                if (array is System.DBNull)
-                {
-                    _connection.Close();
-                    reader.Close();
-                    return;
-                }
-                else
-                {
-                    _notes.AddRange((string[])array);
-                }
-            }
-
-            _connection.Close();
-            reader.Close();
+            _notes = SQLCommander.SelectCommand(user);
 
             foreach (var item in _notes)
             {
@@ -85,14 +55,6 @@ namespace ToDoWPF.View
 
                 deleteButton.Click += new RoutedEventHandler(DeleteButton_Click);
 
-                CheckBox finishTask = new CheckBox()
-                {
-                    BorderThickness = new Thickness(3),
-                    BorderBrush = Brushes.Black,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Bottom,
-                    Content = "Task is completed"
-                };
 
                 Border border = new Border
                 {
@@ -109,7 +71,6 @@ namespace ToDoWPF.View
 
 
                 stackPanel.Children.Add(border);
-                stackPanel.Children.Add(finishTask);
                 stackPanel.Children.Add(editButton);
                 stackPanel.Children.Add(deleteButton);
                 NotesGroupBox.Items.Add(stackPanel);
@@ -119,6 +80,7 @@ namespace ToDoWPF.View
 
         private void AddNoteButton_Click(object sender, RoutedEventArgs e)
         {
+            string cmd;
             string title = AddNoteTextBox.Text;
             if (AddNoteTextBox.Text == "" || AddNoteTextBox.Text.Length > 40)
             {
@@ -154,15 +116,6 @@ namespace ToDoWPF.View
 
                 deleteButton.Click += new RoutedEventHandler(DeleteButton_Click);
 
-                CheckBox finishTask = new CheckBox()
-                {
-                    BorderThickness = new Thickness(3),
-                    BorderBrush = Brushes.Black,
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    VerticalAlignment = VerticalAlignment.Bottom,
-                    Content = "Task is completed"
-                };
-
                 Border border = new Border
                 {
                     Background = Brushes.White,
@@ -177,7 +130,6 @@ namespace ToDoWPF.View
                 };
 
                 stackPanel.Children.Add(border);
-                stackPanel.Children.Add(finishTask);
                 stackPanel.Children.Add(editButton);
                 stackPanel.Children.Add(deleteButton);
                 NotesGroupBox.Items.Add(stackPanel);
@@ -185,52 +137,42 @@ namespace ToDoWPF.View
                 _notes.Add(title);
                 _stackPanels.Add(stackPanel);
 
-                _connection.Open();
-                string cmd = $"UPDATE users SET notes[array_length(notes, 1)] = @note WHERE login = @login";
-                string cmdForNull = $"UPDATE users SET notes[0] = @note WHERE login = @login";
-                NpgsqlCommand command = new NpgsqlCommand(cmd, _connection);
-                NpgsqlCommand commandForNull = new NpgsqlCommand(cmdForNull, _connection);
-
-                try
+                if (_notes.Count > 0)
                 {
-                    command.Parameters.AddWithValue("note", title);
-                    command.Parameters.AddWithValue("login", CurrentUesr.Text);
-                    command.ExecuteNonQuery();
+                    cmd = "UPDATE users SET notes[array_length(notes, 1)] = @note WHERE login = @login";
                 }
-                catch
+                else
                 {
-                    commandForNull.Parameters.AddWithValue("note", title);
-                    commandForNull.Parameters.AddWithValue("login", CurrentUesr.Text);
-                    commandForNull.ExecuteNonQuery();
+                    cmd = " UPDATE users SET notes[0] = @note WHERE login = @login";
                 }
 
-                _connection.Close();
+                SQLCommander.UpdateCommand(title, CurrentUser.Text, cmd);
             }
         }
 
         private void EditButton_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Edit");
+             
         }
 
         private void DeleteButton_Click(object sender, RoutedEventArgs e)
         {
-            var currentStackPanel = _stackPanels[NotesGroupBox.SelectedIndex];
-            Border currentBorder = (Border)currentStackPanel.Children[0];
-            TextBlock title = (TextBlock)currentBorder.Child;
-
-            if (currentStackPanel != null)
+            if (NotesGroupBox.SelectedIndex >= 0)
             {
-                _connection.Open();
+                var currentStackPanel = _stackPanels[NotesGroupBox.SelectedIndex];
+                Border currentBorder = (Border)currentStackPanel.Children[0];
+                TextBlock title = (TextBlock)currentBorder.Child;
+
                 string cmd = $"UPDATE users SET notes = array_remove(notes, @note ) WHERE login = @login";
-                NpgsqlCommand command = new NpgsqlCommand(cmd, _connection);
-                command.Parameters.AddWithValue("note", title.Text);
-                command.Parameters.AddWithValue("login", CurrentUesr.Text);
-                command.ExecuteNonQuery();
-                _connection.Close();
+
+                SQLCommander.UpdateCommand(title.Text, CurrentUser.Text, cmd);
 
                 NotesGroupBox.Items.Remove(currentStackPanel);
                 _stackPanels.Remove(currentStackPanel);
+            }
+            else
+            {
+                MessageBox.Show("Choose your notes!");
             }
         }
     }

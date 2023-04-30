@@ -1,26 +1,24 @@
 ﻿using Npgsql;
 using System;
 using System.Configuration;
-using System.Windows.Documents;
 using ToDoWPF.Model;
 using System.Collections.Generic;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ToDoWPF.AppData
 {
     public static class SQLCommander
     {
         static private string _connectionString = ConfigurationManager.ConnectionStrings["NotesDB"].ConnectionString;
-        static NpgsqlConnection _connection = new NpgsqlConnection(_connectionString);
+        static private NpgsqlConnection _connection = new NpgsqlConnection(_connectionString);
         static private List<string> _notes = new List<string>();
 
-        public static List<string> SelectCommand(User user)
+        public static List<string> SelectCommand(string login, string cmd)
         {
             _connection.Open();
-            var cmd = new NpgsqlCommand("Select notes from users where id = @id", _connection);
-            cmd.Parameters.AddWithValue("id", user.Id);
+            NpgsqlCommand command = new NpgsqlCommand(cmd, _connection);
+            command.Parameters.AddWithValue("login", login);
 
-            var reader = cmd.ExecuteReader();
+            var reader = command.ExecuteReader();
             if (reader.Read())
             {
                 var array = reader["notes"];
@@ -54,6 +52,18 @@ namespace ToDoWPF.AppData
             _connection.Close();
         }
 
+        public static void UpdateCommand(string editedNote, string login, string cmd, int index)
+        {
+            _connection.Open();
 
+            NpgsqlCommand command = new NpgsqlCommand(cmd, _connection);
+
+            command.Parameters.AddWithValue("note", editedNote);
+            command.Parameters.AddWithValue("login", login);
+            command.Parameters.AddWithValue("index", index);
+            command.ExecuteNonQuery();
+
+            _connection.Close();
+        }
     }
 }

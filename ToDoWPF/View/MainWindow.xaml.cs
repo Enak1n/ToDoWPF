@@ -28,54 +28,7 @@ namespace ToDoWPF.View
 
             foreach (var item in _notes)
             {
-                Image editImage = new Image();
-                editImage.Source = new BitmapImage(new Uri("/Images/edit_64px.ico", UriKind.Relative));
-
-                Image deleteImage = new Image();
-                deleteImage.Source = new BitmapImage(new Uri("/Images/delete_64px.ico", UriKind.Relative));
-
-                TextBlock textBlock = new TextBlock() { FontSize = 20, Text = item, Foreground = Brushes.Black };
-                textBlock.FontWeight = FontWeights.SemiBold;
-                StackPanel stackPanel = new StackPanel();
-
-                Button editButton = new Button()
-                {
-                    Content = editImage,
-                    Background = Brushes.White,
-                    Margin = new Thickness(5, 10, 0, 0),
-                };
-
-                editButton.Click += new RoutedEventHandler(EditButton_Click);
-
-                Button deleteButton = new Button()
-                {
-                    Content = deleteImage,
-                    Background = Brushes.White,
-                    Margin = new Thickness(5, 10, 0, 0),
-                };
-
-                deleteButton.Click += new RoutedEventHandler(DeleteButton_Click);
-
-
-                Border border = new Border
-                {
-                    Background = Brushes.White,
-                    BorderBrush = Brushes.LightGray,
-                    BorderThickness = new Thickness(3),
-                    Margin = new Thickness(5, 10, 0, 0),
-                    CornerRadius = new CornerRadius(5),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Width = 700,
-                    Height = 40,
-                    Child = textBlock
-                };
-
-
-                stackPanel.Children.Add(border);
-                stackPanel.Children.Add(editButton);
-                stackPanel.Children.Add(deleteButton);
-                NotesGroupBox.Items.Add(stackPanel);
-                _stackPanels.Add(stackPanel);
+                CreateNote(item);
             }
         }
 
@@ -89,53 +42,7 @@ namespace ToDoWPF.View
             }
             else
             {
-                Image editImage = new Image();
-                editImage.Source = new BitmapImage(new Uri("/Images/edit_64px.ico", UriKind.Relative));
-
-                Image deleteImage = new Image();
-                deleteImage.Source = new BitmapImage(new Uri("/Images/delete_64px.ico", UriKind.Relative));
-
-                TextBlock textBlock = new TextBlock() { FontSize = 20, Text = AddNoteTextBox.Text, Foreground = Brushes.Black };
-                textBlock.FontWeight = FontWeights.SemiBold;
-                StackPanel stackPanel = new StackPanel();
-
-                Button editButton = new Button()
-                {
-                    Content = editImage,
-                    Background = Brushes.White,
-                    Margin = new Thickness(5, 10, 0, 0),
-                };
-
-                editButton.Click += new RoutedEventHandler(EditButton_Click);
-
-                Button deleteButton = new Button()
-                {
-                    Content = deleteImage,
-                    Background = Brushes.White,
-                    Margin = new Thickness(5, 10, 0, 0),
-                };
-
-                deleteButton.Click += new RoutedEventHandler(DeleteButton_Click);
-
-                Border border = new Border
-                {
-                    Background = Brushes.White,
-                    BorderBrush = Brushes.LightGray,
-                    BorderThickness = new Thickness(3),
-                    Margin = new Thickness(5, 10, 0, 0),
-                    CornerRadius = new CornerRadius(5),
-                    HorizontalAlignment = HorizontalAlignment.Left,
-                    Width = 700,
-                    Height = 40,
-                    Child = textBlock
-                };
-
-                stackPanel.Children.Add(border);
-                stackPanel.Children.Add(editButton);
-                stackPanel.Children.Add(deleteButton);
-                NotesGroupBox.Items.Add(stackPanel);
-                AddNoteTextBox.Clear();
-                _stackPanels.Add(stackPanel);
+                CreateNote(AddNoteTextBox.Text);
 
                 if (_notes.Count > 0)
                 {
@@ -164,57 +71,9 @@ namespace ToDoWPF.View
                 string cmd = "SELECT notes From users where login = @login";
                 _notes = SQLCommander.SelectCommand(CurrentUser.Text, cmd);
 
-
                 foreach (var item in _notes)
                 {
-                    Image editImage = new Image();
-                    editImage.Source = new BitmapImage(new Uri("/Images/edit_64px.ico", UriKind.Relative));
-
-                    Image deleteImage = new Image();
-                    deleteImage.Source = new BitmapImage(new Uri("/Images/delete_64px.ico", UriKind.Relative));
-
-                    TextBlock textBlock = new TextBlock() { FontSize = 20, Text = item, Foreground = Brushes.Black };
-                    textBlock.FontWeight = FontWeights.SemiBold;
-                    StackPanel stackPanel = new StackPanel();
-
-                    Button editButton = new Button()
-                    {
-                        Content = editImage,
-                        Background = Brushes.White,
-                        Margin = new Thickness(5, 10, 0, 0),
-                    };
-
-                    editButton.Click += new RoutedEventHandler(EditButton_Click);
-
-                    Button deleteButton = new Button()
-                    {
-                        Content = deleteImage,
-                        Background = Brushes.White,
-                        Margin = new Thickness(5, 10, 0, 0),
-                    };
-
-                    deleteButton.Click += new RoutedEventHandler(DeleteButton_Click);
-
-
-                    Border border = new Border
-                    {
-                        Background = Brushes.White,
-                        BorderBrush = Brushes.LightGray,
-                        BorderThickness = new Thickness(3),
-                        Margin = new Thickness(5, 10, 0, 0),
-                        CornerRadius = new CornerRadius(5),
-                        HorizontalAlignment = HorizontalAlignment.Left,
-                        Width = 700,
-                        Height = 40,
-                        Child = textBlock
-                    };
-
-
-                    stackPanel.Children.Add(border);
-                    stackPanel.Children.Add(editButton);
-                    stackPanel.Children.Add(deleteButton);
-                    NotesGroupBox.Items.Add(stackPanel);
-                    _stackPanels.Add(stackPanel);
+                    CreateNote(item);
                 }
             }
             else
@@ -243,6 +102,56 @@ namespace ToDoWPF.View
             {
                 MessageBox.Show("Choose your notes!");
             }
+        }
+
+        private void CreateNote(string title)
+        {
+            Image editImage = new Image();
+            editImage.Source = new BitmapImage(new Uri("/Images/edit_64px.ico", UriKind.Relative));
+
+            Image deleteImage = new Image();
+            deleteImage.Source = new BitmapImage(new Uri("/Images/delete_64px.ico", UriKind.Relative));
+
+            TextBlock textBlock = new TextBlock() { FontSize = 20, Text = title, Foreground = Brushes.Black };
+            textBlock.FontWeight = FontWeights.SemiBold;
+            StackPanel stackPanel = new StackPanel();
+
+            Button editButton = new Button()
+            {
+                Content = editImage,
+                Background = Brushes.White,
+                Margin = new Thickness(5, 10, 0, 0),
+            };
+
+            editButton.Click += new RoutedEventHandler(EditButton_Click);
+
+            Button deleteButton = new Button()
+            {
+                Content = deleteImage,
+                Background = Brushes.White,
+                Margin = new Thickness(5, 10, 0, 0),
+            };
+
+            deleteButton.Click += new RoutedEventHandler(DeleteButton_Click);
+
+            Border border = new Border
+            {
+                Background = Brushes.White,
+                BorderBrush = Brushes.LightGray,
+                BorderThickness = new Thickness(3),
+                Margin = new Thickness(5, 10, 0, 0),
+                CornerRadius = new CornerRadius(5),
+                HorizontalAlignment = HorizontalAlignment.Left,
+                Width = 700,
+                Height = 40,
+                Child = textBlock
+            };
+
+            stackPanel.Children.Add(border);
+            stackPanel.Children.Add(editButton);
+            stackPanel.Children.Add(deleteButton);
+            NotesGroupBox.Items.Add(stackPanel);
+            _stackPanels.Add(stackPanel);
         }
     }
 }
